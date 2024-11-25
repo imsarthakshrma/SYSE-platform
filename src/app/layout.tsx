@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DevRoom - Developer Workspace",
+  title: "Kroskod - Developer Collaboration and Management Platform",
   description: "Modern developer collaboration platform",
 };
 
