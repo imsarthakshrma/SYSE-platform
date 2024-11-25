@@ -6,6 +6,7 @@ import { DashboardCards } from "@/components/dashboard/cards";
 import { ProductivityChart } from "@/components/dashboard/productivity-chart";
 import { Urgents } from "@/components/dashboard/urgents";
 import { usePageTitle } from "@/contexts/page-title-context";
+import { getData } from "@/app/actions";
 
 export default function WorkspaceOverview() {
   const { setTitle } = usePageTitle();

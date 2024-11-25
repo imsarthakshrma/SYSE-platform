@@ -1,12 +1,14 @@
+'use client'
+
 import { Metadata } from 'next'
 import { Card, CardContent } from "@/components/ui/card"
 
 export const metadata: Metadata = {
-  title: 'Documentation',
-  description: 'Documentation page',
+  title: 'Inbox',
+  description: 'Inbox page',
 }
 
-export default async function Documentation() {
+export default function Inbox() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6">
       <Card className="w-[350px]">
