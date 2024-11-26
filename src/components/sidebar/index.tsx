@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -34,6 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Github } from 'lucide-react';
 
 const teams = [
   { name: 'Acme Inc', id: '1' },
@@ -231,6 +233,11 @@ export function Sidebar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end">
+          <DropdownMenuItem>
+              <Github className="mr-2 h-4 w-4" />
+              Link GitHub
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Star className="mr-2 h-4 w-4" />
               Upgrade to Pro

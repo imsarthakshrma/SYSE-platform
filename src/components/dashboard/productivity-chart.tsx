@@ -1,61 +1,91 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bar } from "recharts";
+import { TrendingUp } from "lucide-react"
+import { Bar, BarChart, CartesianGrid, XAxis, defs } from "recharts"
 import {
-  BarChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
-const data = [
-  { month: "Feb", productivity: 90 },
-  { month: "Mar", productivity: 20 },
-  { month: "Apr", productivity: 65 },
-  { month: "May", productivity: 65 },
-  { month: "Jun", productivity: 85 },
-  { month: "Jul", productivity: 45 },
-  { month: "Aug", productivity: 40 },
-  { month: "Sep", productivity: 80 },
-  { month: "Oct", productivity: 80 },
-  { month: "Nov", productivity: 85 },
-  { month: "Dec", productivity: 90 },
-  { month: "Jan", productivity: 95 },
-];
+const chartData = [
+  { month: "January", productivity: 186 },
+  { month: "February", productivity: 305 },
+  { month: "March", productivity: 237 },
+  { month: "April", productivity: 115 },
+  { month: "May", productivity: 209 },
+  { month: "July", productivity: 150 },
+  { month: "August", productivity: 108 },
+  { month: "September", productivity: 250 },
+  { month: "October", productivity: 265 },
+  { month: "November", productivity: 270 },
+]
+
+const chartConfig = {
+  productivity: {
+    label: "Productivity",
+    color: "url(#productivityGradient)", // Using gradient
+  },
+} satisfies ChartConfig
 
 export function ProductivityChart() {
   return (
-    <Card className="w-[695px] h-[472px]">
+    <Card className="col-span-2 w-[694px]">
       <CardHeader>
-        <CardTitle>Team Productivity</CardTitle>
+        <CardTitle>Monthly Productivity</CardTitle>
+        <CardDescription>January - November 2024</CardDescription>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={data}>
+        <ChartContainer config={chartConfig}>
+          <BarChart 
+            data={chartData} 
+            width={694}
+            height={456}
+            accessibilityLayer
+          >
             <defs>
               <linearGradient id="productivityGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#801DFA" />
                 <stop offset="100%" stopColor="#320D60" />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1F1F1F" />
-            <XAxis dataKey="month" stroke="#666" />
-            <YAxis 
-              ticks={[0, 20, 40, 60, 80, 100]}
-              domain={[0, 100]}
-              unit="%"
-              stroke="#666"
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
             />
-            <Bar
-              dataKey="productivity"
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar 
+              dataKey="productivity" 
+              radius={8}
               fill="url(#productivityGradient)"
-              radius={[4, 4, 0, 0]}
             />
           </BarChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          Productivity increased by 45% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing productivity metrics for the last 11 months
+        </div>
+      </CardFooter>
     </Card>
-  );
+  )
 } 

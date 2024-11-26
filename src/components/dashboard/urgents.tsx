@@ -33,7 +33,7 @@ export function Urgents() {
     <Card className="w-[400px] h-[472px]">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Recent Urgent Requests</CardTitle>
+          <CardTitle>Urgent Requests</CardTitle>
           <span className="text-sm text-muted-foreground">
             You have 3 new issues to overlook
           </span>
