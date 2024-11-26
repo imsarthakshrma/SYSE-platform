@@ -11,18 +11,23 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id         String   @id @default(cuid())
-  name       String
-  email      String   @unique
-  image      String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  repositories Repository[]
-  teams        TeamMember[]
-  urgentRequests UrgentRequest[]
+  id               String   @id @default(cuid())
+  name             String
+  email            String   @unique
+  image            String?
+  githubId         String?  @unique
+  githubUsername   String?
+  githubAccessToken String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  repositories     Repository[]
+  teams           TeamMember[]
+  urgentRequests  UrgentRequest[]
+  productivityMetrics ProductivityMetrics[]
 }
 
 model Team {
@@ -42,6 +47,7 @@ model Repository {
   userId    String
   team      Team?    @relation(fields: [teamId], references: [id])
   teamId    String?
+  metrics   RepositoryMetrics[]
 }
 
 model TeamMember {
@@ -63,4 +69,28 @@ model UrgentRequest {
   status    String   @default("pending") // pending, approved, rejected
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model RepositoryMetrics {
+  id            String   @id @default(cuid())
+  repositoryId  String
+  repository    Repository @relation(fields: [repositoryId], references: [id])
+  commits       Int      @default(0)
+  pullRequests  Int      @default(0)
+  mergedPRs     Int      @default(0)
+  openIssues    Int      @default(0)
+  contributors  Int      @default(0)
+  updatedAt     DateTime @updatedAt
+}
+
+model ProductivityMetrics {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  date          DateTime
+  commits       Int      @default(0)
+  pullRequests  Int      @default(0)
+  merges        Int      @default(0)
+  issues        Int      @default(0)
+  createdAt     DateTime @default(now())
 }

@@ -82,6 +82,229 @@
   }
 }
 
+/* Block access on mobile devices */
+@media (max-width: 767px) {
+  body::before {
+    content: "This platform is only available on tablets and desktop devices.";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--background);
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    z-index: 9999;
+    font-size: 1.25rem;
+    line-height: 1.75;
+  }
+
+  /* Hide all content on mobile */
+  #root, main, .container {
+    display: none !important;
+  }
+}
+
+/* Tablet styles (768px and above) */
+@media (min-width: 768px) {
+  .container {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  main {
+    min-height: calc(100vh - 64px);
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .grid-cols-1 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .chart-container {
+    min-height: 400px;
+    width: 100%;
+  }
+
+  .urgent-requests {
+    width: 100%;
+  }
+}
+
+/* Desktop styles (1024px and above) */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1280px;
+    padding: 0 2rem;
+  }
+
+  main {
+    max-width: 1440px;
+  }
+
+  .grid-cols-1 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  /* Optimize form elements for desktop */
+  input, textarea, select {
+    max-width: 480px;
+  }
+
+  /* Adjust card layouts */
+  .card {
+    max-width: none;
+    transition: transform 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  .overview-grid {
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+  }
+
+  .chart-container {
+    min-height: 500px;
+  }
+}
+
 .tremor-Card-root {
   @apply bg-card text-card-foreground border-border !important;
+  width: 100% !important;
+  margin-bottom: 1rem;
+}
+
+/* Fix for Tremor charts */
+.tremor-Chart-root {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Dashboard Layout Styles */
+.dashboard-container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Tablet styles (768px and above) */
+@media (min-width: 768px) {
+  .dashboard-container {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .chart-container {
+    min-height: 400px;
+    width: 100%;
+    margin-top: 2rem;
+  }
+
+  .urgent-requests {
+    width: 100%;
+    margin-top: 2rem;
+  }
+}
+
+/* Desktop styles (1024px and above) */
+@media (min-width: 1024px) {
+  .dashboard-container {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .overview-grid {
+    margin-top: 3rem;
+  }
+
+  .metrics-grid {
+    margin-bottom: 3rem;
+  }
+
+  .chart-container {
+    margin-top: 3rem;
+  }
+
+  .urgent-requests {
+    margin-top: 3rem;
+  }
+}
+
+/* Card and Section Spacing */
+.section-title {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.metric-card {
+  padding: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tremor-Card-root {
+  @apply bg-card text-card-foreground border-border !important;
+  width: 100% !important;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem !important;
+}
+
+/* Main content area spacing */
+main {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+/* Header spacing */
+.dashboard-header {
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+}
+
+/* Chart container adjustments */
+.chart-wrapper {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--background);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.tremor-Chart-root {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 400px;
 }
