@@ -53,4 +53,4 @@ export async function GET(request: Request) {
   } catch (error: any) {
     return new NextResponse(error.message || 'Failed to fetch PRs', { status: 500 })
   }
-} 
+}

@@ -76,7 +76,6 @@ export function ReviewRequestDialog({ isOpen, onClose, owner, repo }: ReviewRequ
         throw new Error(error)
       }
 
-      // Refresh the PR list after successful merge
       await fetchPullRequests()
     } catch (error) {
       console.error('Failed to merge:', error)
@@ -119,7 +118,9 @@ export function ReviewRequestDialog({ isOpen, onClose, owner, repo }: ReviewRequ
             </div>
           ) : filteredPRs.length === 0 ? (
             <div className="text-center py-8 text-[#666666]">
+
               No open pull requests
+
             </div>
           ) : (
             filteredPRs.map((pr) => (
@@ -131,6 +132,7 @@ export function ReviewRequestDialog({ isOpen, onClose, owner, repo }: ReviewRequ
                   <div>
                     <h4 className="font-medium text-white">{pr.title}</h4>
                     <p className="text-sm text-[#888888] mt-1">
+
                       #{pr.number} by {pr.user.login}
                     </p>
                     <p className="text-xs text-[#666666] mt-0.5">
@@ -163,6 +165,7 @@ export function ReviewRequestDialog({ isOpen, onClose, owner, repo }: ReviewRequ
                       </Button>
                     )}
                   </div>
+
                 </div>
               </div>
             ))

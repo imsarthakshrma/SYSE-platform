@@ -46,7 +46,9 @@ export function DashboardHeader() {
         
         <Button
           onClick={() => setIsDialogOpen(true)}
+
           className="bg-[#5921DD] hover:bg-[#4517B3] text-white font-medium px-4 py-2"
+
         >
           Review Requests
         </Button>
@@ -55,6 +57,7 @@ export function DashboardHeader() {
       <ReviewRequestDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
+
         owner="imsarthakshrma"
         repo="kroskod-platform"
       />
