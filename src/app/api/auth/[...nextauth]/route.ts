@@ -9,7 +9,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
       authorization: {
         params: {
-          scope: 'read:user user:email repo',
+          scope: 'read:user user:email repo pull',
         },
       },
     }),
@@ -31,4 +31,4 @@ export const authOptions: NextAuthOptions = {
 }
 
 const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST } 
+export { handler as GET, handler as POST }

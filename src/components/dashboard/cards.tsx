@@ -5,6 +5,8 @@ import { useEffect, useState } from "react"
 import { getGitHubData } from "@/app/actions"
 import { cn } from "@/lib/utils"
 import { GitPullRequest, GitMerge, AlertCircle } from "lucide-react"
+import { ProductivityChart } from "./productivity-chart"
+import { Urgents } from "@/components/dashboard/urgents"
 
 type GitHubPullRequest = {
   id: number
@@ -44,6 +46,13 @@ type GitHubStats = {
   issuesTrend: number
 }
 
+type MonthlyStats = {
+  month: string
+  prs: number
+  merges: number
+  issues: number
+}
+
 export function DashboardCards() {
   const { data: session } = useSession()
   const [stats, setStats] = useState<GitHubStats>({
@@ -55,11 +64,11 @@ export function DashboardCards() {
     issuesTrend: 0
   })
 
-  useEffect(() => {
-    if (session?.accessToken) {
-      getGitHubData(session).then(data => {
-        if (data) {
-          const prs = data.pullRequests as unknown as GitHubPullRequest[]
+  const [monthlyStats, setMonthlyStats] = useState<MonthlyStats[]>([
+          const issues = data.issues
+
+          // Get all merged PRs (only declare once)
+
           
           // Get all merged PRs
           const mergedPRs = prs.filter(pr => pr.merged_at !== null)
@@ -86,34 +95,94 @@ export function DashboardCards() {
               new Date(issue.created_at) >= startOfWeek
             ).length
           })
-        }
-      })
-    }
-  }, [session])
 
-  return (
-    <div className="grid grid-cols-3 gap-4">
-      <Card
-        title="Pull Requests"
-        value={stats.pullRequests}
-        trend={stats.pullRequestsTrend}
-        icon={<GitPullRequest className="h-4 w-4" />}
-        trendLabel="this week"
-      />
-      <Card
-        title="Merges"
-        value={stats.merges}
-        trend={stats.mergesTrend}
-        icon={<GitMerge className="h-4 w-4" />}
-        trendLabel="this week"
-      />
-      <Card
-        title="Issues"
-        value={stats.issues}
-        trend={stats.issuesTrend}
-        icon={<AlertCircle className="h-4 w-4" />}
-        trendLabel="this week"
-      />
+
+          // Calculate monthly stats
+          const today = new Date()
+          const monthlyData = Array.from({ length: 12 }, (_, i) => {
+            const date = new Date(today)
+            date.setMonth(today.getMonth() - (11 - i))
+            return {
+              month: date.toLocaleString('default', { month: 'short' }),
+              year: date.getFullYear(),
+              prs: 0,
+              merges: 0,
+              issues: 0
+            }
+          })
+
+          // Helper function to find the correct month index
+          const findMonthIndex = (date: Date) => {
+            const targetMonth = date.getMonth()
+            const targetYear = date.getFullYear()
+            return monthlyData.findIndex(data => {
+              const monthDate = new Date()
+              monthDate.setMonth(today.getMonth() - (11 - monthlyData.indexOf(data)))
+              return monthDate.getMonth() === targetMonth && 
+                     monthDate.getFullYear() === targetYear
+            })
+          }
+
+          // Process PRs and merges
+          prs.forEach(pr => {
+            const createdDate = new Date(pr.created_at)
+            const monthIndex = findMonthIndex(createdDate)
+            
+            if (monthIndex >= 0) {
+              monthlyData[monthIndex].prs++
+              if (pr.merged_at) {
+                const mergedDate = new Date(pr.merged_at)
+                const mergeMonthIndex = findMonthIndex(mergedDate)
+                if (mergeMonthIndex >= 0) {
+                  monthlyData[mergeMonthIndex].merges++
+                }
+              }
+            }
+          })
+
+          // Process issues
+          issues.forEach((issue: any) => {
+            const createdDate = new Date(issue.created_at)
+            const monthIndex = findMonthIndex(createdDate)
+            if (monthIndex >= 0) {
+              monthlyData[monthIndex].issues++
+            }
+          })
+
+          setMonthlyStats(monthlyData)
+    <div className="space-y-8">
+      <div className="grid grid-cols-3 gap-4">
+        <Card
+          title="Pull Requests"
+          value={stats.pullRequests}
+          trend={stats.pullRequestsTrend}
+          icon={<GitPullRequest className="h-4 w-4" />}
+          trendLabel="this week"
+        />
+        <Card
+          title="Merges"
+          value={stats.merges}
+          trend={stats.mergesTrend}
+          icon={<GitMerge className="h-4 w-4" />}
+          trendLabel="this week"
+        />
+        <Card
+          title="Issues"
+          value={stats.issues}
+          trend={stats.issuesTrend}
+          icon={<AlertCircle className="h-4 w-4" />}
+          trendLabel="this week"
+        />
+      </div>
+      <div className="flex gap-8">
+        <div className="w-3/4">
+          <ProductivityChart data={monthlyStats} />
+        </div>
+        <div className="w-1/4">
+          <Urgents />
+        </div>
+      </div>
+
     </div>
   )
 }
