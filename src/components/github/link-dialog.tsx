@@ -1,8 +1,9 @@
 'use client'
 
+import * as React from "react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Github } from "lucide-react"
+import { Github, Loader2 } from "lucide-react"
 
 interface LinkGitHubDialogProps {
   isOpen: boolean
@@ -11,9 +12,22 @@ interface LinkGitHubDialogProps {
 }
 
 export function LinkGitHubDialog({ isOpen, onClose, onContinue }: LinkGitHubDialogProps) {
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  const handleContinue = async () => {
+    try {
+      setIsLoading(true)
+      window.location.href = '/api/auth/github'
+    } catch (error) {
+      console.error('Failed to redirect:', error)
+    } finally {
+      onClose()
+    }
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[474px] bg-[#0C0C0C] border-[#2D2D2D] text-white p-6">
+      <DialogContent className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[474px] bg-[#0C0C0C] border-[#2D2D2D] text-white p-6">
         <DialogHeader className="space-y-2">
           <div className="mx-auto bg-[#1F1F1F] p-3.5 rounded-full w-fit border border-[#2D2D2D]">
             <Github className="h-7 w-7 text-[#DEDEDE]" aria-label="GitHub Icon" />
@@ -40,11 +54,18 @@ export function LinkGitHubDialog({ isOpen, onClose, onContinue }: LinkGitHubDial
             Cancel
           </Button>
           <Button 
-            onClick={onContinue}
+            onClick={handleContinue}
+            disabled={isLoading}
             className="w-full sm:w-auto bg-[#6018B9]/70 hover:bg-[#855ABB]/85 text-white transition-colors"
-            aria-label="Continue with GitHub"
           >
-            Continue with GitHub
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Redirecting...
+              </span>
+            ) : (
+              'Continue with GitHub'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
