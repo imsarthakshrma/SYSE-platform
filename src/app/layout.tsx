@@ -34,7 +34,7 @@ export default function RootLayout({
             <div className="flex min-h-screen">
               <Sidebar />
               <main className="flex-1 overflow-auto">
-                <div className="container mx-auto min-w-[800px]">
+                <div className="container mx-auto min-w-[800px] p-4 mt-12 flex flex-col gap-8">
                   {children}
                 </div>
               </main>
