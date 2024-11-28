@@ -1,91 +1,78 @@
 "use client";
 
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis, defs } from "recharts"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
+import { useEffect, useState } from "react"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
 
-const chartData = [
-  { month: "January", productivity: 186 },
-  { month: "February", productivity: 305 },
-  { month: "March", productivity: 237 },
-  { month: "April", productivity: 115 },
-  { month: "May", productivity: 209 },
-  { month: "July", productivity: 150 },
-  { month: "August", productivity: 108 },
-  { month: "September", productivity: 250 },
-  { month: "October", productivity: 265 },
-  { month: "November", productivity: 270 },
-]
+interface ProductivityChartProps {
+  data: {
+    month: string
+    prs: number
+    merges: number
+    issues: number
+  }[]
+}
 
-const chartConfig = {
-  productivity: {
-    label: "Productivity",
-    color: "url(#productivityGradient)", // Using gradient
-  },
-} satisfies ChartConfig
-
-export function ProductivityChart() {
+export function ProductivityChart({ data }: ProductivityChartProps) {
   return (
-    <Card className="col-span-2 w-[694px]">
-      <CardHeader>
-        <CardTitle>Monthly Productivity</CardTitle>
-        <CardDescription>January - November 2024</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart 
-            data={chartData} 
-            width={694}
-            height={456}
-            accessibilityLayer
-          >
-            <defs>
-              <linearGradient id="productivityGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#801DFA" />
-                <stop offset="100%" stopColor="#320D60" />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} />
+    <div className="rounded-xl border border-[#1F1F1F] bg-[#0C0C0C] p-6 w-full">
+      <div className="flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-white">Monthly Productivity</h3>
+        <div className="text-sm text-[#888888]">January - November 2024</div>
+      </div>
+      <div className="h-[350px] mt-4">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data}>
             <XAxis
               dataKey="month"
+              stroke="#888888"
+              fontSize={12}
               tickLine={false}
-              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+            <YAxis
+              stroke="#888888"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => `${value}`}
             />
-            <Bar 
-              dataKey="productivity" 
-              radius={8}
-              fill="url(#productivityGradient)"
+            <Tooltip
+              content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  return (
+                    <div className="rounded-lg border border-[#1F1F1F] bg-[#0C0C0C] p-2 shadow-md">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="text-[#888888]">Pull Requests:</div>
+                        <div className="text-white font-medium">{payload[0].value}</div>
+                        <div className="text-[#888888]">Merges:</div>
+                        <div className="text-white font-medium">{payload[1].value}</div>
+                        <div className="text-[#888888]">Issues:</div>
+                        <div className="text-white font-medium">{payload[2].value}</div>
+                      </div>
+                    </div>
+                  )
+                }
+                return null
+              }}
+            />
+            <Bar
+              dataKey="prs"
+              fill="#9467FF"
+              radius={[4, 4, 0, 0]}
+            />
+            <Bar
+              dataKey="merges"
+              fill="#4ADE80"
+              radius={[4, 4, 0, 0]}
+            />
+            <Bar
+              dataKey="issues"
+              fill="#F87171"
+              radius={[4, 4, 0, 0]}
             />
           </BarChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Productivity increased by 45% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing productivity metrics for the last 11 months
-        </div>
-      </CardFooter>
-    </Card>
+        </ResponsiveContainer>
+      </div>
+    </div>
   )
 } 

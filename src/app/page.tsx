@@ -5,8 +5,6 @@ import { useEffect, useState } from "react"
 import { getGitHubData } from "./actions"
 import { DashboardHeader } from "@/components/dashboard/header";
 import { DashboardCards } from "@/components/dashboard/cards";
-import { ProductivityChart } from "@/components/dashboard/productivity-chart";
-import { Urgents } from "@/components/dashboard/urgents";
 import { usePageTitle } from "@/contexts/page-title-context";
 import { Loader2 } from "lucide-react"
 
@@ -63,15 +61,7 @@ export default function WorkspaceOverview() {
   return (
     <div className="container space-y-8 p-8">
       <DashboardHeader />
-      
-      <div className="space-y-8">
-        <DashboardCards />
-        
-        <div className="flex gap-8">
-          <ProductivityChart />
-          <Urgents />
-        </div>
-      </div>
+      <DashboardCards />
     </div>
   );
 }
