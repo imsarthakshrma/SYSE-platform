@@ -35,6 +35,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LinkGitHubDialog } from "@/components/github/link-dialog";
+import { signInWithGitHub } from "@/app/actions";
+import { useSession, signOut } from "next-auth/react"
+import { Session } from "next-auth"
+
+type GitHubProfile = {
+  login: string;
+  avatar_url: string;
+  name: string;
+} | null;
 
 const teams = [
   { name: 'Acme Inc', id: '1' },
@@ -83,6 +93,26 @@ export function Sidebar() {
   const pathname = usePathname();
   const [openSection, setOpenSection] = React.useState<string | null>("Project Tasks");
   const [isGitHubDialogOpen, setIsGitHubDialogOpen] = React.useState(false);
+  const { data: session } = useSession()
+  const [isGitHubLinked, setIsGitHubLinked] = React.useState(false)
+  const [githubProfile, setGithubProfile] = React.useState<GitHubProfile>(null);
+
+  React.useEffect(() => {
+    setIsGitHubLinked(!!session?.accessToken)
+  }, [session])
+
+  React.useEffect(() => {
+    if (session?.accessToken) {
+      fetch('https://api.github.com/user', {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+        .then(res => res.json())
+        .then(setGithubProfile)
+        .catch(console.error);
+    }
+  }, [session]);
 
   const isProjectTasksPath = React.useMemo(() => {
     return pathname.startsWith('/project-tasks');
@@ -93,6 +123,32 @@ export function Sidebar() {
       setOpenSection("Project Tasks");
     }
   }, [isProjectTasksPath]);
+
+  const handleGitHubAuth = async () => {
+    try {
+      const success = await signInWithGitHub();
+      if (success) {
+        setIsGitHubLinked(true);
+      }
+    } catch (error) {
+      console.error('GitHub authentication failed:', error);
+    } finally {
+      setIsGitHubDialogOpen(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut()
+    setIsGitHubLinked(false)
+  }
+
+  const handleGitHubClick = () => {
+    if (isGitHubLinked) {
+      return;
+    }
+    
+    setIsGitHubDialogOpen(true);
+  };
 
   return (
     <div className="flex h-screen w-64 flex-col bg-[#0A0A0A] text-white border-r border-[#1F1F1F]">
@@ -211,37 +267,57 @@ export function Sidebar() {
       </nav>
 
       {/* Bottom Section */}
-      <div className="mt-auto">
-        {/* Link GitHub */}
-        <div className="border-t border-[#1F1F1F]">
-          <div className="px-2 py-3">
-            <Button 
-              variant="ghost" 
-              className="w-full flex items-center gap-6 text-[#DEDEDE] hover:bg-[#1F1F1F] hover:text-white px-2"
-              onClick={() => setIsGitHubDialogOpen(true)}
-            >
-              <Github className="h-5 w-4" />
-              <span className="text-sm">Link GitHub</span>
-            </Button>
-          </div>
-        </div>
+      <div className="mt-auto border-t border-[#1F1F1F]">
+        <div className="p-2 py-4">
+          {/* Link GitHub Status Button */}
+          <Button 
+            variant="ghost" 
+            className="w-full flex items-center justify-between px-3.5 py-2 hover:bg-[#1F1F1F] hover:text-white mb-1 group"
+            onClick={handleGitHubClick}
+            title={isGitHubLinked ? "GitHub Connected" : "Connect GitHub"}
+          >
+            <div className="flex items-center gap-3">
+              <div className={cn(
+                "p-1 rounded transition-colors",
+                isGitHubLinked 
+                  ? "bg-[#1A4726] group-hover:bg-[#206F33]" 
+                  : "bg-[#1F1F1F] group-hover:bg-[#2D2D2D]"
+              )}>
+                <Github className={cn(
+                  "h-4 w-4 transition-colors",
+                  isGitHubLinked 
+                    ? "text-[#4ADE80] group-hover:text-[#4ADE80]" 
+                    : "text-[#9467FF] group-hover:text-white"
+                )} />
+              </div>
+              <span className={cn(
+                "text-md font-bold transition-colors",
+                isGitHubLinked 
+                  ? "text-[#4ADE80] group-hover:text-[#4ADE80]" 
+                  : "text-[#DEDEDE] group-hover:text-white"
+              )}>
+                {isGitHubLinked 
+                  ? `Linked as ${githubProfile?.login}` 
+                  : 'Link GitHub'}
+              </span>
+            </div>
+          </Button>
 
-        {/* Profile */}
-        <div className="border-t border-[#1F1F1F]">
+          {/* Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="ghost" 
-                className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-[#1F1F1F] transition-colors group"
+                className="w-full flex items-center justify-between px-4 py-2 hover:bg-[#1F1F1F] transition-colors group"
               >
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-8 w-8 border border-[#2D2D2D]">
+                  <Avatar className="h-6 w-6 border border-[#2D2D2D]">
                     <AvatarImage src="/avatar.png" />
                     <AvatarFallback className="bg-[#1F1F1F] text-[#9467FF]">V</AvatarFallback>
                   </Avatar>
-                  <div className="flex flex-col items-start">
+                  <div className="flex flex-col items-start -space-y-0.5">
                     <span className="text-sm font-medium text-[#DEDEDE] group-hover:text-white">Veydh</span>
-                    <span className="text-xs text-[#4D4D4D]">veydh@granular.com</span>
+                    <span className="text-[11px] text-[#4D4D4D]">veydh@granular.com</span>
                   </div>
                 </div>
                 <ChevronUp className="h-4 w-4 text-[#4D4D4D] group-hover:text-white transition-colors" />
@@ -277,6 +353,15 @@ export function Sidebar() {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Only render dialog if not linked */}
+      {!isGitHubLinked && (
+        <LinkGitHubDialog 
+          isOpen={isGitHubDialogOpen}
+          onClose={() => setIsGitHubDialogOpen(false)}
+          onContinue={handleGitHubAuth}
+        />
+      )}
     </div>
   );
 } 
