@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
@@ -60,12 +60,16 @@ export default function WorkspaceOverview() {
   }
 
   return (
-    <div className="ml-6"> {/* Changed from ml-[240px] to ml-64 to match sidebar width */}
+    <div className="ml-64 min-h-screen flex flex-col bg-[#0A0A0A]">
       <SearchBar />
-      <div className="p-6 space-y-8">
-        <DashboardHeader />
-        <DashboardCards />
+      <div className="flex-1">
+        <div className="p-6">
+          <DashboardHeader />
+          <div className="mt-8">
+            <DashboardCards />
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+} 

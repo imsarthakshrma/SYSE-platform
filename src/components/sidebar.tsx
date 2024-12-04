@@ -69,7 +69,7 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
       </div>
       <div className="mt-auto px-3">
-        <UserDropdown email="m@example.com" />
+        <UserDropdown email="sarthak@kroskod.com" />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { ReviewRequestDialog } from "@/components/review-request/dialog";
+import { SearchBar } from "@/components/dashboard/search-bar";
 import {
   Popover,
   PopoverContent,

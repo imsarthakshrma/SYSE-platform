@@ -30,15 +30,13 @@ const urgentRequests = [
 
 export function Urgents() {
   return (
-    <Card className="w-[400px] h-[472px]">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Urgent Requests</CardTitle>
-          <span className="text-sm text-muted-foreground">
-            You have 3 new issues to overlook
-          </span>
+    <div className="rounded-xl border border-[#1F1F1F] bg-[#0C0C0C] p-6 w-[320px]">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-white">Urgent Requests</h3>
+        <div className="text-sm text-[#888888]">
+          You have 3 new issues to overlook
         </div>
-      </CardHeader>
+      </div>
       <CardContent>
         <ScrollArea className="h-[380px] pr-4">
           <div className="space-y-4">
@@ -65,6 +63,6 @@ export function Urgents() {
           </div>
         </ScrollArea>
       </CardContent>
-    </Card>
+    </div>
   );
 } 
