@@ -151,34 +151,35 @@ export function DashboardCards() {
 
           setMonthlyStats(monthlyData)
     <div className="space-y-8">
+      {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <Card
-          title="Pull Requests"
+        <Card 
+          title="Pull Requests" 
           value={stats.pullRequests}
           trend={stats.pullRequestsTrend}
-          icon={<GitPullRequest className="h-4 w-4" />}
+          icon={<GitPullRequest className="h-12 w-4 text-[#9467FF]" />}
           trendLabel="this week"
         />
-        <Card
-          title="Merges"
+        <Card 
+          title="Merges" 
           value={stats.merges}
           trend={stats.mergesTrend}
-          icon={<GitMerge className="h-4 w-4" />}
+          icon={<GitMerge className="h-12 w-4 text-[#4ADE80]" />}
           trendLabel="this week"
         />
-        <Card
-          title="Issues"
+        <Card 
+          title="Issues" 
           value={stats.issues}
           trend={stats.issuesTrend}
-          icon={<AlertCircle className="h-4 w-4" />}
+          icon={<AlertCircle className="h-12 w-4 text-[#F87171]" />}
           trendLabel="this week"
         />
       </div>
+
+      {/* Charts Section */}
       <div className="flex gap-8">
-        <div className="w-3/4">
-          <ProductivityChart data={monthlyStats} />
-        </div>
-        <div className="w-1/4">
+        <ProductivityChart data={monthlyStats} />
+        <div className="flex-1">
           <Urgents />
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import { getGitHubData } from "./actions"
 import { DashboardHeader } from "@/components/dashboard/header";
+import { SearchBar } from "@/components/dashboard/search-bar";
 import { DashboardCards } from "@/components/dashboard/cards";
 import { usePageTitle } from "@/contexts/page-title-context";
 import { Loader2 } from "lucide-react"
@@ -59,9 +60,12 @@ export default function WorkspaceOverview() {
   }
 
   return (
-    <div className="container space-y-8 p-8">
-      <DashboardHeader />
-      <DashboardCards />
+    <div className="ml-6"> {/* Changed from ml-[240px] to ml-64 to match sidebar width */}
+      <SearchBar />
+      <div className="p-6 space-y-8">
+        <DashboardHeader />
+        <DashboardCards />
+      </div>
     </div>
   );
 }

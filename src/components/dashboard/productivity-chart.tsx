@@ -14,14 +14,17 @@ interface ProductivityChartProps {
 
 export function ProductivityChart({ data }: ProductivityChartProps) {
   return (
-    <div className="rounded-xl border border-[#1F1F1F] bg-[#0C0C0C] p-6 w-full">
+    <div className="rounded-xl border border-[#1F1F1F] bg-[#0C0C0C] p-6 flex-1">
       <div className="flex items-center gap-2">
         <h3 className="text-lg font-semibold text-white">Monthly Productivity</h3>
         <div className="text-sm text-[#888888]">January - November 2024</div>
       </div>
-      <div className="h-[350px] mt-4">
+      <div className="h-[400px] mt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
+          <BarChart 
+            data={data}
+            margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+          >
             <XAxis
               dataKey="month"
               stroke="#888888"

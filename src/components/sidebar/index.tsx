@@ -316,8 +316,8 @@ export function Sidebar() {
                     <AvatarFallback className="bg-[#1F1F1F] text-[#9467FF]">V</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col items-start -space-y-0.5">
-                    <span className="text-sm font-medium text-[#DEDEDE] group-hover:text-white">Veydh</span>
-                    <span className="text-[11px] text-[#4D4D4D]">veydh@granular.com</span>
+                    <span className="text-sm font-medium text-[#DEDEDE] group-hover:text-white">Sarthak</span>
+                    <span className="text-[11px] text-[#4D4D4D]">sarthak@kroskod.com</span>
                   </div>
                 </div>
                 <ChevronUp className="h-4 w-4 text-[#4D4D4D] group-hover:text-white transition-colors" />
