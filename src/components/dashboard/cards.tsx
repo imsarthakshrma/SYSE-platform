@@ -63,16 +63,14 @@ export function DashboardCards() {
     mergesTrend: 0,
     issuesTrend: 0
   })
-  const [monthlyStats, setMonthlyStats] = useState<MonthlyStats[]>([])
 
-  useEffect(() => {
-    if (session?.accessToken) {
-      getGitHubData(session).then(data => {
-        if (data) {
-          const prs = data.pullRequests as unknown as GitHubPullRequest[]
+  const [monthlyStats, setMonthlyStats] = useState<MonthlyStats[]>([
           const issues = data.issues
 
           // Get all merged PRs (only declare once)
+
+          
+          // Get all merged PRs
           const mergedPRs = prs.filter(pr => pr.merged_at !== null)
           
           // Calculate the start of this week (Sunday)
@@ -97,6 +95,7 @@ export function DashboardCards() {
               new Date(issue.created_at) >= startOfWeek
             ).length
           })
+
 
           // Calculate monthly stats
           const today = new Date()
@@ -151,12 +150,6 @@ export function DashboardCards() {
           })
 
           setMonthlyStats(monthlyData)
-        }
-      })
-    }
-  }, [session])
-
-  return (
     <div className="space-y-8">
       {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-4">
@@ -190,6 +183,7 @@ export function DashboardCards() {
           <Urgents />
         </div>
       </div>
+
     </div>
   )
 }
